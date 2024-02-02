@@ -1,4 +1,5 @@
 ﻿using TravelDeskAPI.Models;
+using TravelDeskAPI.ViewModel;
 
 namespace TravelDeskAPI.IRepo
 {
@@ -7,7 +8,15 @@ namespace TravelDeskAPI.IRepo
         List<User> GetAllUsers();
         User GetUserById(int id);
         void AddUser(User user);
-        //void UpdateUser(User user);
-        //bool DeleteUser(int id);
+        int UpdateUser(User user, int id);
+        bool DeleteUser(int id);
+        List<Role> GetRoles();
+
+        List<ManagerViewModel> GetManagers();
+        List<Department> GetDepartments();
+        public int GetRole(LoginViewModel user);
+
+
+        public string GetRoleName(int roleId);
     }
 }

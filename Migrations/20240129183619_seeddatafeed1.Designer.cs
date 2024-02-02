@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelDeskAPI.DataContext;
 
@@ -11,9 +12,11 @@ using TravelDeskAPI.DataContext;
 namespace TravelDeskAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240129183619_seeddatafeed1")]
+    partial class seeddatafeed1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,40 +55,6 @@ namespace TravelDeskAPI.Migrations
                     b.HasKey("DeptId");
 
                     b.ToTable("Department");
-
-                    b.HasData(
-                        new
-                        {
-                            DeptId = 1,
-                            CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7942),
-                            DepartmentName = "HR",
-                            IsActive = false
-                        },
-                        new
-                        {
-                            DeptId = 2,
-                            CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7944),
-                            DepartmentName = "Admin",
-                            IsActive = false
-                        },
-                        new
-                        {
-                            DeptId = 3,
-                            CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7944),
-                            DepartmentName = "IT",
-                            IsActive = false
-                        },
-                        new
-                        {
-                            DeptId = 4,
-                            CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7945),
-                            DepartmentName = "Sales",
-                            IsActive = false
-                        });
                 });
 
             modelBuilder.Entity("TravelDeskAPI.Models.Role", b =>
@@ -124,7 +93,7 @@ namespace TravelDeskAPI.Migrations
                         {
                             RoleId = 1,
                             CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7820),
+                            CreatedOn = new DateTime(2024, 1, 30, 0, 6, 18, 938, DateTimeKind.Local).AddTicks(8186),
                             IsActive = false,
                             RoleName = "Admin"
                         },
@@ -132,7 +101,7 @@ namespace TravelDeskAPI.Migrations
                         {
                             RoleId = 2,
                             CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7831),
+                            CreatedOn = new DateTime(2024, 1, 30, 0, 6, 18, 938, DateTimeKind.Local).AddTicks(8199),
                             IsActive = false,
                             RoleName = "HRAdmin"
                         },
@@ -140,7 +109,7 @@ namespace TravelDeskAPI.Migrations
                         {
                             RoleId = 3,
                             CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7832),
+                            CreatedOn = new DateTime(2024, 1, 30, 0, 6, 18, 938, DateTimeKind.Local).AddTicks(8200),
                             IsActive = false,
                             RoleName = "Employee"
                         },
@@ -148,7 +117,7 @@ namespace TravelDeskAPI.Migrations
                         {
                             RoleId = 4,
                             CreateBy = 0,
-                            CreatedOn = new DateTime(2024, 2, 2, 11, 55, 30, 971, DateTimeKind.Local).AddTicks(7833),
+                            CreatedOn = new DateTime(2024, 1, 30, 0, 6, 18, 938, DateTimeKind.Local).AddTicks(8201),
                             IsActive = false,
                             RoleName = "Manager"
                         });

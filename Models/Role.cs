@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TravelDeskAPI.DataContext;
+using TravelDeskAPI.Models;
 
 namespace TravelDeskAPI.Models
 {
@@ -15,5 +17,11 @@ namespace TravelDeskAPI.Models
 
         public virtual ICollection<User> Users { get; set;}
 
+      
+
     }
+
+
+ 
 }
+
