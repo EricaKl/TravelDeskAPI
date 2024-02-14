@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+.sign-in__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .sign-in__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: #ccc;
+  }
+  
+  .sign-in__wrapper form {
+    width: 24rem;
+    max-width: 90%;
+    z-index: 1;
+    animation: showSignInForm 1s;
+  }
+  
+ 
+  

@@ -1,0 +1,18 @@
+/* .showTable-title{
+    text-align: center;
+} */
+
+/* .show-all-card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+} */
+.btn{
+    margin: 2px;
+}
+
+.addNew-btn{
+    float: left;
+}

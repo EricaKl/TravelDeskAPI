@@ -1,145 +1,183 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { jwtDecode } from "jwt-decode";
-import './registration.css';
-
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import './registration.css'
+import { Link } from 'react-router-dom';
 
 
-const Registration = () => {
-    debugger;   
-    const [roles, setRoles] = useState([]);
-    const [managers, setManagers] = useState([]);
-    const [depts, setDepts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [userRole, setUserRole] = useState('');
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-    useEffect(() => {
+const EditUser = () => {
+  const { userid } = useParams();
 
-        fetch('http://localhost:21384/api/User/GetRoles')
-            .then(response => response.json())
-            .then(data => {
-                setRoles(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching roles:', error);
-                setLoading(false);
-            });
+  const Navigate = useNavigate();
+  const [roles, setRoles] = useState([]);
+  const [managers, setManagers] = useState([]);
+  const [depts, setDepts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({});
 
-        fetch('http://localhost:21384/api/User/GetManagers')
-            .then(response => response.json())
-            .then(data => {
-                setManagers(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching managers:', error);
-                setLoading(false);
-            });
-
-        fetch('http://localhost:21384/api/User/GetDepartments')
-            .then(response => response.json())
-            .then(data => {
-                setDepts(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching departments:', error);
-                setLoading(false);
-            });
-    }, []);
-
-    const formik = useFormik({
-        initialValues: {
-            firstName: '',
-            lastName: '',
-            address: '',
-            mobileNumber: '',
-            emailId: '',
-            password: '',
-            role: '',
-            department: '',
-            manager: '',
-        },
-        validationSchema: Yup.object({
-            firstName: Yup.string()
-                .max(15, 'Must be 15 characters or less')
-                .required('Required'),
-            lastName: Yup.string()
-                .max(15, 'Must be 15 characters or less')
-                .required('Required'),
-            address: Yup.string()
-                .max(50, 'Must be 50 characters or less')
-                .required('Required'),
-            mobileNumber: Yup.string()
-                .matches(/^[0-9]{10}$/, 'Must be a valid phone number')
-                .required('Required'),
-            emailId: Yup.string()
-                .email('Invalid email address')
-                .required('Required'),
-            password: Yup.string()
-                .min(8, 'Must be at least 8 characters')
-                .required('Required'),
-            role: Yup.string()
-                // .oneOf(['Employee', 'Manager'], 'Invalid Role')
-                .required('Required'),
-        }),
-      
-        onSubmit: async (values, { setSubmitting, resetForm }) => {
-            debugger;   
-            try {
-                const mytoken = localStorage.getItem("token");
-                var bearer = 'Bearer ' + mytoken;
-                // const decodedToken = jwtDecode(mytoken);
-                // setUserRole(decodedToken.role);
-                const response = await fetch('http://localhost:21384/api/User/Add', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization':bearer,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        firstName: values.firstName,
-                        lastName: values.lastName,
-                        address: values.address,
-                        mobileNumber: values.mobileNumber,
-                        email: values.emailId,
-                        password: values.password,
-                        roleId: parseInt(values.role),
-                        departmentId: parseInt(values.department),
-                        managerId: parseInt(values.manager),
-                    }),
-                });
-                if(response.Ok)
-                {
-                    // const data = await response.json();
-                    console.log('User added:');
-                    resetForm();
-                    setSubmitting(false);
-                   
-                }
-              
-            } catch (error) {
-                console.error('Error adding user:', error);
-            } finally {
-                setSubmitting(false);
-            }
-        },
+  useEffect(() => {
+    fetch(`http://localhost:21384/api/User/GetById/${userid}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+      setUserData(data);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error('Error fetching user details:', error);
+      setLoading(false);
     });
 
-    return (
-        <div className="container-fluid">
-              {/* {
-                userRole == "Admin" ? ( */}
+
+      fetch('http://localhost:21384/api/User/GetRoles')
+          .then(response => response.json())
+          .then(data => {
+              setRoles(data);
+              setLoading(false);
+          })
+          .catch(error => {
+              console.error('Error fetching roles:', error);
+              setLoading(false);
+          });
+
+      fetch('http://localhost:21384/api/User/GetManagers')
+          .then(response => response.json())
+          .then(data => {
+              setManagers(data);
+              setLoading(false);
+          })
+          .catch(error => {
+              console.error('Error fetching managers:', error);
+              setLoading(false);
+          });
+
+      fetch('http://localhost:21384/api/User/GetDepartments')
+          .then(response => response.json())
+          .then(data => {
+              setDepts(data);
+              setLoading(false);
+          })
+          .catch(error => {
+              console.error('Error fetching departments:', error);
+              setLoading(false);
+          });
+  }, []);
+
+
+  const formik = useFormik({
+      initialValues: {
+        firstName: '',
+        lastName:'',
+        address: '',
+        mobileNumber:'',
+        email:'',
+        password: '',
+        role:'', 
+        department: '', 
+        manager:  '',
+        createBy : '',
+        createdOn : '',
+
+      },
+      validationSchema: Yup.object({
+          firstName: Yup.string()
+              .max(15, 'Must be 15 characters or less')
+              .required('Required'),
+          lastName: Yup.string()
+              .max(15, 'Must be 15 characters or less')
+              .required('Required'),
+          address: Yup.string()
+              .max(50, 'Must be 50 characters or less')
+              .required('Required'),
+          mobileNumber: Yup.string()
+              .matches(/^[0-9]{10}$/, 'Must be a valid phone number')
+              .required('Required'),
+        //   emailId: Yup.string()
+        //       .email('Invalid email address')
+        //       .required('Required'),
+        //   password: Yup.string()
+        //       .min(8, 'Must be at least 8 characters')
+        //       .required('Required'),
+          role: Yup.string()
+              // .oneOf(['Employee', 'Manager'], 'Invalid Role')
+              .required('Required'),
+      }),
+     
+      onSubmit: async (values, { setSubmitting, resetForm }) => {
+     
+          try {
+                    console.log(values);
+              const response = await fetch('http://localhost:21384/api/User/Update/' + userid, {
+                  method: 'PUT',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  // body: JSON.stringify(values),
+                  body: JSON.stringify({
+                      firstName: values.firstName,
+                      lastName: values.lastName,
+                      address: values.address,
+                      mobileNumber: values.mobileNumber,
+                      email: values.email,        
+                      password: values.password,
+                      createBy:values.createBy,
+                      createdOn:values.createdOn,
+                      roleId: parseInt(values.role),
+                      departmentId: parseInt(values.department),
+                      managerId: parseInt(values.manager),
+                  }),
+              });
+             
+              if(response.ok)
+              {
+                alert("Saved Successfully");
+                setSubmitting(false);
+                resetForm();
+                Navigate("/")
+              }
+
+             
+          } catch (error) {
+              console.error('Error adding user:', error);
+          } finally {
+              setSubmitting(false);
+          }
+      },
+  });
+  useEffect(() => {
+    if (userData) {
+      formik.setValues({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        address: userData.address,
+        mobileNumber: userData.mobileNumber,
+        email: userData.email,
+        password: userData.password,
+        createBy : userData.createBy,
+        createdOn:userData.createdOn,
+        role: userData.roleId || '', 
+        department: userData.departmentId ||'', 
+        manager: userData.managerId || ''
+
+      });
+    }
+  }, [userData]);
+
+  return (
+    <div className="container-fluid">
             <div>
                 <div className="row justify-content-center form-wrapper my-2">
                     <div className="col-md-6 form">
-                        <h1 className="text-center mb-4 rHeading">Add User</h1>
+                        <h1 className="text-center mb-4 rHeading">Edit User</h1>
                         <form onSubmit={formik.handleSubmit}>
                             <div className="row g-3">
                                 <div className="col-md-6 label-text-style align-items-start">
+                                    {/* <label htmlFor="firstName" className="form-label ">
+                                        First Name
+                                    </label> */}
                                     <input
                                         id="firstName"
                                         name="firstName"
@@ -156,6 +194,10 @@ const Registration = () => {
                                 </div>
 
                                 <div className="col-md-6 label-text-style align-items-start">
+                                    {/* <label htmlFor="lastName" className="form-label label-text-style">
+                                        Last Name
+                                    </label> */}
+
                                     <input
                                         id="lastName"
                                         name="lastName"
@@ -172,8 +214,11 @@ const Registration = () => {
                                 </div>
                             </div>
 
-                            <div className="row g-3">
+                            {/* <div className="row g-3">
                                 <div className="col-md-12 label-text-style align-items-start">
+                                    <label htmlFor="emailId" className="form-label label-text-style">
+                                        Email ID
+                                    </label>
                                     <input
                                         id="emailId"
                                         name="emailId"
@@ -182,14 +227,17 @@ const Registration = () => {
                                         className={`form-control-sm form-control dark-border ${formik.touched.emailId && formik.errors.emailId ? 'is-invalid' : ''}`}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.emailId}
+                                        value={formik.values.email}
                                     />
                                     {formik.touched.emailId && formik.errors.emailId ? (
                                         <div className="invalid-feedback">{formik.errors.emailId}</div>
                                     ) : null}
-                                </div>
-
+                                </div> */}
+{/* 
                                 <div className="col-md-12 label-text-style align-items-start">
+                                    <label htmlFor="password" className="form-label label-text-style">
+                                        Password
+                                    </label>
                                     <input
                                         id="password"
                                         name="password"
@@ -204,10 +252,13 @@ const Registration = () => {
                                         <div className="invalid-feedback">{formik.errors.password}</div>
                                     ) : null}
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="row g-3">
                                 <div className="col-md-12 label-text-style align-items-start">
+                                    {/* <label htmlFor="address" className="form-label label-text-style">
+                                        Address
+                                    </label> */}
                                     <input
                                         id="address"
                                         name="address"
@@ -226,6 +277,9 @@ const Registration = () => {
 
                             <div className='row g-3'>
                                 <div className="col-md-6 label-text-style align-items-start">
+                                    {/* <label htmlFor="mobileNumber" className="form-label label-text-style">
+                                        Mobile Number
+                                    </label> */}
                                     <input
                                         id="mobileNumber"
                                         name="mobileNumber"
@@ -264,10 +318,14 @@ const Registration = () => {
                                         <div className="invalid-feedback">{formik.errors.role}</div>
                                     ) : null}
                                 </div>
+
                             </div>
 
                             <div className="row g-3">
                                 <div className="col-md-6 label-text-style align-items-start">
+                                    {/* <label htmlFor="department" className="form-label label-text-style">
+                                        Department
+                                    </label> */}
                                     <select
                                         id="department"
                                         name="department"
@@ -281,11 +339,11 @@ const Registration = () => {
                                             <option value="" label="Loading..." />
                                         ) : (
                                             depts.map(dept => (
-                                                <option key={dept.deptId} 
-                                                value={dept.deptId} label={dept.departmentName} />
+                                                <option key={dept.deptId}
+                                                    value={dept.deptId} label={dept.departmentName} />
                                             ))
                                         )}
-                                    
+
                                     </select>
                                     {formik.touched.department && formik.errors.department ? (
                                         <div className="invalid-feedback">{formik.errors.department}</div>
@@ -293,6 +351,9 @@ const Registration = () => {
                                 </div>
 
                                 <div className="col-md-6 label-text-style align-items-start">
+                                    {/* <label htmlFor="manager" className="form-label label-text-style">
+                                        Manager
+                                    </label> */}
                                     <select
                                         id="manager"
                                         name="manager"
@@ -319,7 +380,7 @@ const Registration = () => {
                             <div className="row mt-2 mb-2">
                                 <div className="d-grid p-1 gap-2 col-6 mx-auto label-text-style  align-items-start submitbtn-wrapper w-100">
                                     <button className="btn btn-primary w-100 mt-3" type="submit">
-                                        Register
+                                        Update User
                                     </button>
                                 </div>
                             </div>
@@ -327,13 +388,8 @@ const Registration = () => {
                     </div>
                 </div>
             </div>
-                {/* ):(
-                    <div>
-                        <h2>Permission Denied</h2>
-                        </div>
-                )} */}
         </div>
     );
-};
+}
 
-export default Registration;
+export default EditUser
